@@ -1,23 +1,25 @@
-const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client('YOUR_CLIENT_ID');
+// โค้ดสำหรับการจัดการการยืนยันตัวตน
+console.log('Auth module loaded');
 
-async function authenticate(req, res, next) {
-    const token = req.headers.authorization;
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    try {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: 'YOUR_CLIENT_ID',
-        });
-        const payload = ticket.getPayload();
-        req.user = payload;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: 'Unauthorized' });
-    }
+export function login(username, password) {
+    return fetch('/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+    })
+    .then(response => response.json());
 }
 
-module.exports = { authenticate };
+export function logout() {
+    return fetch('/api/logout', {
+        method: 'POST',
+    })
+    .then(response => response.json());
+}
+
+export function checkAuth() {
+    return fetch('/api/checkAuth')
+        .then(response => response.json());
+}

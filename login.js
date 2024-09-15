@@ -1,21 +1,25 @@
-function onSignIn(googleUser) {
-    const profile = googleUser.getBasicProfile();
-    const idToken = googleUser.getAuthResponse().id_token;
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-    fetch('/api/auth', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: idToken }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = 'index.html';
-        } else {
-            console.error('Authentication failed:', data.error);
-        }
-    })
-    .catch(error => console.error('Error during authentication:', error));
-}
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/profile.html';
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
