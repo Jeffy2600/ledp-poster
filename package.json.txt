@@ -1,0 +1,17 @@
+{
+  "name": "recommendation-site",
+  "version": "1.0.0",
+  "description": "A site for recommending games, apps, and more.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9",
+    "marked": "^2.0.0",
+    "i18next": "^21.6.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
