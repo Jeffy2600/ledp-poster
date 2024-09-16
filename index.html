@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1 data-lang="welcome">Welcome to the Post Sharing Platform</h1>
-        <nav>
-            <a href="login.html" data-lang="login">Login</a>
-            <a href="profile.html" data-lang="profile">Profile</a>
-            <a href="create-post.html" data-lang="createPost">Create Post</a>
+    <header class="main-header">
+        <h1 class="site-title" data-lang="welcome">Welcome to the Post Sharing Platform</h1>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="login.html" data-lang="login">Login</a></li>
+                <li><a href="profile.html" data-lang="profile">Profile</a></li>
+                <li><a href="create-post.html" data-lang="createPost">Create Post</a></li>
+            </ul>
             <div class="language-selector">
                 <label for="language-select" data-lang="language_label">Language:</label>
                 <select id="language-select">
@@ -23,18 +25,18 @@
         </nav>
     </header>
 
-    <main>
-        <div id="search">
-            <input type="text" id="search-input" data-lang="searchPlaceholder" placeholder="Search posts...">
-            <button id="search-btn" data-lang="searchButton">Search</button>
+    <main class="content">
+        <div id="search" class="search-container">
+            <input type="text" id="search-input" class="search-input" data-lang="searchPlaceholder" placeholder="Search posts...">
+            <button id="search-btn" class="search-button" data-lang="searchButton">Search</button>
         </div>
 
-        <div id="posts">
+        <div id="posts" class="posts-container">
             <!-- Posts will be dynamically added here -->
         </div>
     </main>
 
-    <footer>
+    <footer class="main-footer">
         <p>&copy; 2023 Post Sharing Platform</p>
     </footer>
 

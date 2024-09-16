@@ -7,24 +7,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Your Profile</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="post.html">Create Post</a>
+    <header class="main-header">
+        <h1 class="page-title">Your Profile</h1>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="post.html" class="nav-link">Create Post</a></li>
+            </ul>
         </nav>
     </header>
-    <main>
-        <section id="user-posts">
+    <main class="content">
+        <section id="user-posts" class="user-posts-container">
             <!-- User posts will be dynamically loaded here -->
         </section>
     </main>
     <script src="profile.js"></script>
-        <script src="src/app.js"></script>
-        <script src="src/auth.js"></script>
-        <script src="src/db.js"></script>
-        <script src="src/post.js"></script>
-        <script src="src/comment.js"></script>
-        <script src="config/config.js"></script>
+    <script src="src/app.js"></script>
+    <script src="src/auth.js"></script>
+    <script src="src/db.js"></script>
+    <script src="src/post.js"></script>
+    <script src="src/comment.js"></script>
+    <script src="config/config.js"></script>
 </body>
 </html>
