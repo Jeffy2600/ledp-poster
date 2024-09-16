@@ -1,25 +1,39 @@
+// src/login.js
 document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+  const loginForm = document.getElementById('loginForm');
+  const languageSelect = document.getElementById('language-select');
 
-        fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = '/profile.html';
-            } else {
-                alert('Login failed: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
+  // Initialize language
+  updateLanguage(languageSelect.value);
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const result = await login(username, password);
+      if (result.success) {
+        alert(getTranslation('login_success'));
+        window.location.href = 'index.html';
+      } else {
+        alert(getTranslation('login_failed') + ': ' + result.message);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert(getTranslation('login_error'));
+    }
+  });
+
+  languageSelect.addEventListener('change', (e) => {
+    updateLanguage(e.target.value);
+  });
 });
+
+function updateLanguage(lang) {
+  changeLanguage(lang);
+  document.querySelectorAll('[data-lang]').forEach(elem => {
+    const key = elem.getAttribute('data-lang');
+    elem.textContent = getTranslation(key);
+  });
+}
