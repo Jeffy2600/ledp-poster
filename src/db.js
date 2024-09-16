@@ -1,11 +1,36 @@
-const mongoose = require('mongoose');
+const mysql = require('mysql2/promise');
 
-const postSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-  author: String,
-  createdAt: { type: Date, default: Date.now }
+// สร้างการเชื่อมต่อกับฐานข้อมูล MySQL
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'your_username',
+  password: 'your_password',
+  database: 'your_database',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
+
+// ฟังก์ชันสำหรับค้นหาโพสต์
+async function searchPosts(searchTerm) {
+  const [rows] = await pool.execute(
+    'SELECT * FROM posts WHERE MATCH(title, content) AGAINST(? IN NATURAL LANGUAGE MODE)',
+    [searchTerm]
+  );
+  return rows;
+}
+
+// ฟังก์ชันสำหรับดึงโพสต์มาแสดง
+async function getPosts(limit = 10, offset = 0) {
+  const [rows] = await pool.execute(
+    'SELECT * FROM posts ORDER BY createdAt DESC LIMIT ? OFFSET ?',
+    [limit, offset]
+  );
+  return rows;
+}
+
+// คงไว้สำหรับระบบควบคุมโฆษณา
+const mongoose = require('mongoose');
 
 const adSchema = new mongoose.Schema({
   title: String,
@@ -14,10 +39,8 @@ const adSchema = new mongoose.Schema({
   keywords: [String]
 });
 
-postSchema.index({ title: 'text', content: 'text' });
 adSchema.index({ title: 'text', description: 'text', keywords: 'text' });
 
-const Post = mongoose.model('Post', postSchema);
 const Ad = mongoose.model('Ad', adSchema);
 
-module.exports = { Post, Ad };
+module.exports = { searchPosts, getPosts, Ad };
