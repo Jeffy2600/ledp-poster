@@ -1,11 +1,13 @@
 /* Modern and Responsive Styles */
 :root {
-  --primary-color: #4a90e2;
-  --secondary-color: #50c878;
-  --background-color: #f5f7fa;
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --background-color: #f4f6f8;
   --text-color: #333;
   --header-bg: #fff;
-  --footer-bg: #2c3e50;
+  --footer-bg: #34495e;
+  --card-bg: #fff;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -15,7 +17,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
   line-height: 1.6;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -25,43 +27,47 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 20px;
 }
 
 /* Header Styles */
 header {
   background-color: var(--header-bg);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-header .container {
+.main-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 15px;
+  padding: 1rem 0;
 }
 
-header h1 {
+.site-title {
   font-size: 1.8rem;
   color: var(--primary-color);
 }
 
-nav {
+.main-nav ul {
   display: flex;
-  gap: 1rem;
+  list-style: none;
 }
 
-nav a {
+.main-nav li {
+  margin-left: 1.5rem;
+}
+
+.main-nav a {
   color: var(--text-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-nav a:hover {
+.main-nav a:hover {
   color: var(--primary-color);
 }
 
@@ -74,29 +80,29 @@ nav a:hover {
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: var(--card-bg);
 }
 
 /* Main Content Styles */
-main {
+.content {
   padding: 2rem 0;
 }
 
-#search {
+.search-container {
   display: flex;
   margin-bottom: 2rem;
 }
 
-#search-input {
+.search-input {
   flex-grow: 1;
   padding: 0.75rem;
   border: none;
   border-radius: 30px 0 0 30px;
   font-size: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
 }
 
-#search-btn {
+.search-button {
   padding: 0.75rem 1.5rem;
   background-color: var(--primary-color);
   color: #fff;
@@ -106,20 +112,20 @@ main {
   transition: background-color 0.3s ease;
 }
 
-#search-btn:hover {
-  background-color: darken(var(--primary-color), 10%);
+.search-button:hover {
+  background-color: #2980b9;
 }
 
-#posts {
+.posts-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
 }
 
 .post-card {
-  background-color: #fff;
+  background-color: var(--card-bg);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
 }
@@ -140,7 +146,7 @@ main {
 }
 
 /* Footer Styles */
-footer {
+.main-footer {
   background-color: var(--footer-bg);
   color: #fff;
   padding: 2rem 0;
@@ -163,38 +169,41 @@ footer {
 }
 
 .btn-primary:hover {
-  background-color: darken(var(--primary-color), 10%);
+  background-color: #2980b9;
 }
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
-  header .container {
+  .main-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  nav {
+  .main-nav {
     margin-top: 1rem;
-    flex-direction: column;
     width: 100%;
   }
 
-  nav a {
-    padding: 0.5rem 0;
-  }
-
-  #search {
+  .main-nav ul {
     flex-direction: column;
   }
 
-  #search-input,
-  #search-btn {
+  .main-nav li {
+    margin: 0.5rem 0;
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  .search-input,
+  .search-button {
     width: 100%;
     border-radius: 30px;
     margin-bottom: 1rem;
   }
 
-  #posts {
+  .posts-container {
     grid-template-columns: 1fr;
   }
 }
@@ -222,12 +231,12 @@ footer {
     --text-color: #f0f0f0;
     --header-bg: #2c2c2c;
     --footer-bg: #1c1c1c;
+    --card-bg: #2c2c2c;
   }
 
-  .post-card,
-  #search-input,
+  .search-input,
   #language-select {
-    background-color: #2c2c2c;
+    background-color: #3a3a3a;
     color: var(--text-color);
   }
 }
