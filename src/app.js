@@ -1,29 +1,74 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { authenticate } = require('./auth');
-const { createPost, getPosts, updatePost, deletePost } = require('./post');
-const { searchPosts } = require('./search');
-const { ratePost, getPostRating } = require('./rating');
-const { addComment, getComments } = require('./comment');
-const { recommendPosts } = require('./recommendation');
-const { getAds } = require('./ads');
+document.addEventListener('DOMContentLoaded', function() {
+  // เช็คสถานะการล็อกอิน
+  checkAuthStatus();
 
-const app = express();
-app.use(bodyParser.json());
+  // โหลดโพสต์
+  loadPosts();
 
-app.post('/api/auth', authenticate);
-app.post('/api/posts', createPost);
-app.get('/api/posts', getPosts);
-app.put('/api/posts/:id', updatePost);
-app.delete('/api/posts/:id', deletePost);
-app.get('/api/search', searchPosts);
-app.post('/api/rate/:id', ratePost);
-app.get('/api/rate/:id', getPostRating);
-app.post('/api/comment/:id', addComment);
-app.get('/api/comment/:id', getComments);
-app.get('/api/recommend', recommendPosts);
-app.get('/api/ads', getAds);
+  // เพิ่ม event listener สำหรับปุ่มค้นหา
+  const searchBtn = document.getElementById('search-btn');
+  searchBtn.addEventListener('click', searchPosts);
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+  // เพิ่ม event listener สำหรับการเปลี่ยนภาษา
+  const languageSelect = document.getElementById('language-select');
+  languageSelect.addEventListener('change', changeLanguage);
 });
+
+function checkAuthStatus() {
+  // เช็คสถานะการล็อกอินจาก auth.js
+  auth.checkAuth().then(isLoggedIn => {
+    const loginBtn = document.getElementById('login-btn');
+    if (isLoggedIn) {
+      loginBtn.textContent = 'Logout';
+      loginBtn.href = '#';
+      loginBtn.addEventListener('click', logout);
+    } else {
+      loginBtn.textContent = 'Login';
+      loginBtn.href = 'login.html';
+    }
+  });
+}
+
+function loadPosts() {
+  // โหลดโพสต์จาก db.js
+  db.getPosts().then(posts => {
+    const postsSection = document.getElementById('posts');
+    postsSection.innerHTML = '';
+    posts.forEach(post => {
+      const postElement = createPostElement(post);
+      postsSection.appendChild(postElement);
+    });
+  });
+}
+
+function createPostElement(post) {
+  const postDiv = document.createElement('div');
+  postDiv.classList.add('post');
+  postDiv.innerHTML = `
+        <h2>${post.title}</h2>
+        <p>${post.content}</p>
+        <button class="like-btn" data-id="${post.id}">Like</button>
+        <span class="like-count">${post.likes}</span>
+    `;
+  return postDiv;
+}
+
+function searchPosts() {
+  const searchInput = document.getElementById('search-input');
+  const query = searchInput.value;
+  // ค้นหาโพสต์โดยใช้ฟังก์ชันจาก search.js
+  search.searchPosts(query).then(loadPosts);
+}
+
+function changeLanguage() {
+  const selectedLanguage = document.getElementById('language-select').value;
+  // เปลี่ยนภาษาโดยใช้ฟังก์ชันจาก language.js
+  language.changeLanguage(selectedLanguage);
+}
+
+function logout() {
+  // ล็อกเอาท์โดยใช้ฟังก์ชันจาก auth.js
+  auth.logout().then(() => {
+    window.location.reload();
+  });
+}
