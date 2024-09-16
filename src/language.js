@@ -76,11 +76,21 @@ function initializeLanguage() {
       changeLanguage(this.value);
     });
 
-    const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+    // Get browser language
+    const browserLang = navigator.language || navigator.userLanguage;
+    
+    // Set default language based on browser language
+    let defaultLang = 'en';
+    if (browserLang.startsWith('th')) {
+      defaultLang = 'th';
+    }
+
+    // Use stored language preference if available, otherwise use the default
+    const preferredLanguage = localStorage.getItem('preferredLanguage') || defaultLang;
+    
     languageSelect.value = preferredLanguage;
     changeLanguage(preferredLanguage);
   }
-  updatePageContent();
 }
 
 document.addEventListener('DOMContentLoaded', initializeLanguage);

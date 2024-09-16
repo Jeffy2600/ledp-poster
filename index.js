@@ -1,46 +1,110 @@
 // index.js
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize language selector
-  const languageSelect = document.getElementById('language-select');
-  languageSelect.addEventListener('change', function() {
-    changeLanguage(this.value);
-  });
+    // Initialize language
+    initializeLanguage();
 
-  // Initialize search functionality
-  const searchBtn = document.getElementById('search-btn');
-  searchBtn.addEventListener('click', function() {
-    const searchInput = document.getElementById('search-input');
-    searchPosts(searchInput.value);
-  });
-
-  // Load initial posts
-  loadPosts();
-
-  // Check authentication status
-  checkAuthStatus();
+    // Initialize other components
+    initializeAuth();
+    initializeSearch();
+    initializePosts();
+    initializeRating();
+    initializeComments();
+    initializeRecommendations();
+    initializeAds();
 });
 
+function initializeLanguage() {
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+        languageSelect.addEventListener('change', function() {
+            changeLanguage(this.value);
+        });
+
+        // Get browser language
+        const browserLang = navigator.language || navigator.userLanguage;
+        
+        // Set default language based on browser language
+        let defaultLang = 'en';
+        if (browserLang.startsWith('th')) {
+            defaultLang = 'th';
+        }
+
+        // Use stored language preference if available, otherwise use the default
+        const preferredLanguage = localStorage.getItem('preferredLanguage') || defaultLang;
+        
+        languageSelect.value = preferredLanguage;
+        changeLanguage(preferredLanguage);
+    }
+}
+
 function changeLanguage(lang) {
-  // Implement language change logic
-  console.log('Language changed to:', lang);
-  // You can use the language.js file for actual implementation
+    if (typeof window.changeLanguage === 'function') {
+        window.changeLanguage(lang);
+    } else {
+        console.error('changeLanguage function not found. Make sure language.js is loaded.');
+    }
 }
 
-function searchPosts(query) {
-  // Implement search functionality
-  console.log('Searching for:', query);
-  // You can use the search.js file for actual implementation
+function initializeAuth() {
+    // Initialize authentication
+    if (typeof initAuth === 'function') {
+        initAuth();
+    } else {
+        console.error('initAuth function not found. Make sure auth.js is loaded.');
+    }
 }
 
-function loadPosts() {
-  // Load initial posts
-  console.log('Loading posts');
-  // You can use the post.js file for actual implementation
+function initializeSearch() {
+    // Initialize search functionality
+    if (typeof initSearch === 'function') {
+        initSearch();
+    } else {
+        console.error('initSearch function not found. Make sure search.js is loaded.');
+    }
 }
 
-function checkAuthStatus() {
-  // Check authentication status
-  console.log('Checking auth status');
-  // You can use the auth.js file for actual implementation
+function initializePosts() {
+    // Initialize posts
+    if (typeof loadPosts === 'function') {
+        loadPosts();
+    } else {
+        console.error('loadPosts function not found. Make sure post.js is loaded.');
+    }
+}
+
+function initializeRating() {
+    // Initialize rating system
+    if (typeof initRating === 'function') {
+        initRating();
+    } else {
+        console.error('initRating function not found. Make sure rating.js is loaded.');
+    }
+}
+
+function initializeComments() {
+    // Initialize comments system
+    if (typeof initComments === 'function') {
+        initComments();
+    } else {
+        console.error('initComments function not found. Make sure comment.js is loaded.');
+    }
+}
+
+function initializeRecommendations() {
+    // Initialize recommendation system
+    if (typeof initRecommendations === 'function') {
+        initRecommendations();
+    } else {
+        console.error('initRecommendations function not found. Make sure recommendation.js is loaded.');
+    }
+}
+
+function initializeAds() {
+    // Initialize ads
+    if (typeof initAds === 'function') {
+        initAds();
+    } else {
+        console.error('initAds function not found. Make sure ads.js is loaded.');
+    }
 }
