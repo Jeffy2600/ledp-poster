@@ -1,4 +1,4 @@
-constconstconstconstconstconstconstconst db = require('./db');
+const db = require('./db');
 
 class Post {
   constructor(id, title, content, author, createdAt) {
