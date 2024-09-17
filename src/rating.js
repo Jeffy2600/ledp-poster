@@ -1,24 +1,46 @@
-const { Post } = require('./db');
+const db = require('./db');
 
-async function ratePost(req, res) {
-    const { id } = req.params;
-    const { rating } = req.body;
-    try {
-        const post = await Post.findByIdAndUpdate(id, { $inc: { rating: rating } }, { new: true });
-        res.status(200).json(post);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to rate post' });
-    }
+async function ratePost(postId, userId, rating) {
+  const checkSql = 'SELECT * FROM ratings WHERE post_id = ? AND user_id = ?';
+  const existingRating = await db.query(checkSql, [postId, userId]);
+
+  if (existingRating.length > 0) {
+    const updateSql = 'UPDATE ratings SET rating = ?, updated_at = CURRENT_TIMESTAMP WHERE post_id = ? AND user_id = ?';
+    await db.query(updateSql, [rating, postId, userId]);
+  } else {
+    const insertSql = 'INSERT INTO ratings (post_id, user_id, rating) VALUES (?, ?, ?)';
+    await db.query(insertSql, [postId, userId, rating]);
+  }
+
+  await updateAverageRating(postId);
 }
 
-async function getPostRating(req, res) {
-    const { id } = req.params;
-    try {
-        const post = await Post.findById(id).select('rating');
-        res.status(200).json(post);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch post rating' });
-    }
+async function getPostRating(postId) {
+  const sql = 'SELECT AVG(rating) as average_rating, COUNT(*) as total_ratings FROM ratings WHERE post_id = ?';
+  const result = await db.query(sql, [postId]);
+  return {
+    averageRating: result[0].average_rating || 0,
+    totalRatings: result[0].total_ratings || 0
+  };
 }
 
-module.exports = { ratePost, getPostRating };
+async function getUserRating(postId, userId) {
+  const sql = 'SELECT rating FROM ratings WHERE post_id = ? AND user_id = ?';
+  const result = await db.query(sql, [postId, userId]);
+  return result.length > 0 ? result[0].rating : null;
+}
+
+async function updateAverageRating(postId) {
+  const avgSql = 'SELECT AVG(rating) as avg_rating FROM ratings WHERE post_id = ?';
+  const avgResult = await db.query(avgSql, [postId]);
+  const averageRating = avgResult[0].avg_rating || 0;
+
+  const updateSql = 'UPDATE posts SET average_rating = ? WHERE id = ?';
+  await db.query(updateSql, [averageRating, postId]);
+}
+
+module.exports = {
+  ratePost,
+  getPostRating,
+  getUserRating
+};
