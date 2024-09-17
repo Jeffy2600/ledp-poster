@@ -1,15 +1,15 @@
-// Wait for the DOM to be fully loaded
+// รอให้ DOM โหลดเสร็จสมบูรณ์
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize language
+  // เริ่มต้นการตั้งค่าภาษา
   initializeLanguage();
 
-  // Load posts
+  // โหลดโพสต์
   loadPosts();
 
-  // Set up event listeners
+  // ตั้งค่า event listeners
   setupEventListeners();
 
-  // Check authentication status
+  // ตรวจสอบสถานะการเข้าสู่ระบบ
   checkAuthStatus();
 });
 
@@ -21,8 +21,8 @@ function initializeLanguage() {
       changeLanguage(selectedLanguage);
     });
   }
-  // Set initial language
-  changeLanguage(languageSelect ? languageSelect.value : 'en');
+  // ตั้งค่าภาษาเริ่มต้น
+  changeLanguage(languageSelect ? languageSelect.value : 'th');
 }
 
 function loadPosts() {
@@ -32,7 +32,7 @@ function loadPosts() {
       initializeRatings();
       initializeComments();
     })
-    .catch(error => console.error('Error loading posts:', error));
+    .catch(error => console.error('เกิดข้อผิดพลาดในการโหลดโพสต์:', error));
 }
 
 function setupEventListeners() {
@@ -57,7 +57,7 @@ function performSearch() {
     const searchTerm = searchInput.value;
     search.searchPosts(searchTerm)
       .then(results => displaySearchResults(results))
-      .catch(error => console.error('Error searching posts:', error));
+      .catch(error => console.error('เกิดข้อผิดพลาดในการค้นหาโพสต์:', error));
   }
 }
 
@@ -79,8 +79,8 @@ function createPostElement(post) {
     <h2>${post.title}</h2>
     <p>${post.content}</p>
     <div class="post-meta">
-      <span>Author: ${post.author}</span>
-      <span>Date: ${new Date(post.date).toLocaleDateString()}</span>
+      <span>ผู้เขียน: ${post.author}</span>
+      <span>วันที่: ${new Date(post.date).toLocaleDateString('th-TH')}</span>
     </div>
     <div class="rating" data-post-id="${post.id}"></div>
     <div class="comments" data-post-id="${post.id}"></div>
@@ -93,7 +93,7 @@ function displaySearchResults(results) {
   if (postsContainer) {
     postsContainer.innerHTML = '';
     if (results.length === 0) {
-      postsContainer.innerHTML = '<p>No results found.</p>';
+      postsContainer.innerHTML = '<p>ไม่พบผลลัพธ์</p>';
     } else {
       results.forEach(post => {
         const postElement = createPostElement(post);
@@ -140,8 +140,8 @@ function initializeComments() {
   });
 }
 
-// Load advertisements
+// โหลดโฆษณา
 ads.loadAds();
 
-// Initialize recommendations
+// เริ่มต้นระบบแนะนำ
 recommendation.initRecommendations();
