@@ -11,9 +11,9 @@
         <h1 class="site-title" data-lang="welcome">Welcome to the Post Sharing Platform</h1>
         <nav class="main-nav">
             <ul class="nav-list">
-                <li><a href="login.html" data-lang="login">Login</a></li>
-                <li><a href="profile.html" data-lang="profile">Profile</a></li>
-                <li><a href="create-post.html" data-lang="createPost">Create Post</a></li>
+                <li><a href="#" id="login-link" data-lang="login">Login</a></li>
+                <li><a href="profile.html" id="profile-link" data-lang="profile">Profile</a></li>
+                <li><a href="create-post.html" id="create-post-link" data-lang="createPost">Create Post</a></li>
             </ul>
             <div class="language-selector">
                 <label for="language-select" data-lang="language_label">Language:</label>
@@ -33,6 +33,10 @@
 
         <div id="posts" class="posts-container">
             <!-- Posts will be dynamically added here -->
+        </div>
+
+        <div id="pagination" class="pagination">
+            <!-- Pagination controls will be added here -->
         </div>
     </main>
 

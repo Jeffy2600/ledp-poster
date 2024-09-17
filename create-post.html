@@ -3,36 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang="createPost">Create Post</title>
+    <title data-lang="createPost">Create a New Post</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="main-header">
-        <h1 class="site-title" data-lang="createPost">Create Post</h1>
+        <h1 class="site-title" data-lang="createPost">Create a New Post</h1>
         <nav class="main-nav">
-            <ul>
+            <ul class="nav-list">
                 <li><a href="index.html" data-lang="home">Home</a></li>
-                <li><a href="profile.html" data-lang="profile">Profile</a></li>
+                <li><a href="#" id="login-link" data-lang="login">Login</a></li>
+                <li><a href="profile.html" id="profile-link" data-lang="profile">Profile</a></li>
             </ul>
+            <div class="language-selector">
+                <label for="language-select" data-lang="language_label">Language:</label>
+                <select id="language-select">
+                    <option value="en">English</option>
+                    <option value="th">ไทย</option>
+                </select>
+            </div>
         </nav>
     </header>
 
     <main class="content">
-        <div class="container">
-            <form id="create-post-form" class="form">
-                <div class="form-group">
-                    <label for="post-title" data-lang="postTitle">Post Title:</label>
-                    <input type="text" id="post-title" name="post-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="post-content" data-lang="postContent">Post Content:</label>
-                    <textarea id="post-content" name="post-content" rows="6" required></textarea>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" data-lang="submit">Submit</button>
-                </div>
-            </form>
-        </div>
+        <form id="create-post-form" class="post-form">
+            <div class="form-group">
+                <label for="post-title" data-lang="postTitle">Title:</label>
+                <input type="text" id="post-title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="post-content" data-lang="postContent">Content:</label>
+                <textarea id="post-content" name="content" rows="10" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="post-tags" data-lang="postTags">Tags (comma-separated):</label>
+                <input type="text" id="post-tags" name="tags">
+            </div>
+            <button type="submit" data-lang="submitPost">Submit Post</button>
+        </form>
     </main>
 
     <footer class="main-footer">
@@ -43,5 +51,7 @@
     <script src="src/auth.js"></script>
     <script src="src/db.js"></script>
     <script src="src/post.js"></script>
+    <script src="config/config.js"></script>
+    <script src="create-post.js"></script>
 </body>
 </html>
