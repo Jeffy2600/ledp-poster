@@ -43,10 +43,14 @@ async function getDatabaseConfig() {
     }
 }
 
-// Initialize configuration from database
-getDatabaseConfig();
+// Function to initialize configuration
+async function initializeConfig() {
+    await getDatabaseConfig();
+    return config;
+}
 
 module.exports = {
     config,
-    query
+    query,
+    initializeConfig
 };
