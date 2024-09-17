@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Set up event listeners
   setupEventListeners();
+
+  // Check authentication status
+  checkAuthStatus();
 });
 
 function initializeLanguage() {
@@ -15,17 +18,21 @@ function initializeLanguage() {
   if (languageSelect) {
     languageSelect.addEventListener('change', function() {
       const selectedLanguage = languageSelect.value;
-      language.changeLanguage(selectedLanguage);
+      changeLanguage(selectedLanguage);
     });
   }
   // Set initial language
-  language.changeLanguage(languageSelect ? languageSelect.value : 'en');
+  changeLanguage(languageSelect ? languageSelect.value : 'en');
 }
 
 function loadPosts() {
-  // Implement your post loading logic here
-  // For example:
-  // fetchPosts().then(posts => displayPosts(posts));
+  db.getPosts()
+    .then(posts => {
+      displayPosts(posts);
+      initializeRatings();
+      initializeComments();
+    })
+    .catch(error => console.error('Error loading posts:', error));
 }
 
 function setupEventListeners() {
@@ -34,17 +41,107 @@ function setupEventListeners() {
     searchButton.addEventListener('click', performSearch);
   }
 
-  // Add more event listeners as needed
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        performSearch();
+      }
+    });
+  }
 }
 
 function performSearch() {
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     const searchTerm = searchInput.value;
-    // Implement your search logic here
-    // For example:
-    // searchPosts(searchTerm).then(results => displaySearchResults(results));
+    search.searchPosts(searchTerm)
+      .then(results => displaySearchResults(results))
+      .catch(error => console.error('Error searching posts:', error));
   }
 }
 
-// Add any other necessary functions for your application
+function displayPosts(posts) {
+  const postsContainer = document.getElementById('posts');
+  if (postsContainer) {
+    postsContainer.innerHTML = '';
+    posts.forEach(post => {
+      const postElement = createPostElement(post);
+      postsContainer.appendChild(postElement);
+    });
+  }
+}
+
+function createPostElement(post) {
+  const postDiv = document.createElement('div');
+  postDiv.className = 'post';
+  postDiv.innerHTML = `
+    <h2>${post.title}</h2>
+    <p>${post.content}</p>
+    <div class="post-meta">
+      <span>Author: ${post.author}</span>
+      <span>Date: ${new Date(post.date).toLocaleDateString()}</span>
+    </div>
+    <div class="rating" data-post-id="${post.id}"></div>
+    <div class="comments" data-post-id="${post.id}"></div>
+  `;
+  return postDiv;
+}
+
+function displaySearchResults(results) {
+  const postsContainer = document.getElementById('posts');
+  if (postsContainer) {
+    postsContainer.innerHTML = '';
+    if (results.length === 0) {
+      postsContainer.innerHTML = '<p>No results found.</p>';
+    } else {
+      results.forEach(post => {
+        const postElement = createPostElement(post);
+        postsContainer.appendChild(postElement);
+      });
+    }
+  }
+}
+
+function checkAuthStatus() {
+  const user = auth.getCurrentUser();
+  updateNavigation(user);
+}
+
+function updateNavigation(user) {
+  const loginLink = document.querySelector('a[data-lang="login"]');
+  const profileLink = document.querySelector('a[data-lang="profile"]');
+  const createPostLink = document.querySelector('a[data-lang="createPost"]');
+
+  if (user) {
+    if (loginLink) loginLink.textContent = getTranslation('logout');
+    if (profileLink) profileLink.style.display = 'inline-block';
+    if (createPostLink) createPostLink.style.display = 'inline-block';
+  } else {
+    if (loginLink) loginLink.textContent = getTranslation('login');
+    if (profileLink) profileLink.style.display = 'none';
+    if (createPostLink) createPostLink.style.display = 'none';
+  }
+}
+
+function initializeRatings() {
+  const ratingElements = document.querySelectorAll('.rating');
+  ratingElements.forEach(element => {
+    const postId = element.getAttribute('data-post-id');
+    rating.initRating(element, postId);
+  });
+}
+
+function initializeComments() {
+  const commentElements = document.querySelectorAll('.comments');
+  commentElements.forEach(element => {
+    const postId = element.getAttribute('data-post-id');
+    comment.loadComments(element, postId);
+  });
+}
+
+// Load advertisements
+ads.loadAds();
+
+// Initialize recommendations
+recommendation.initRecommendations();

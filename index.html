@@ -1,135 +1,55 @@
-document.addEventListener('DOMContentLoaded', function() {
-});
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title data-lang="welcome">Welcome to the Post Sharing Platform</title>
+                <link rel="stylesheet" href="styles.css">
+                </head>
+                <body>
+                    <header class="main-header">
+                            <h1 class="site-title" data-lang="welcome">Welcome to the Post Sharing Platform</h1>
+                                    <nav class="main-nav">
+                                                <ul>
+                                                                <li><a href="login.html" data-lang="login">Login</a></li>
+                                                                                <li><a href="profile.html" data-lang="profile">Profile</a></li>
+                                                                                                <li><a href="create-post.html" data-lang="createPost">Create Post</a></li>
+                                                                                                            </ul>
+                                                                                                                        <div class="language-selector">
+                                                                                                                                        <label for="language-select" data-lang="language_label">Language:</label>
+                                                                                                                                                        <select id="language-select">
+                                                                                                                                                                            <option value="en">English</option>
+                                                                                                                                                                                                <option value="th">ไทย</option>
+                                                                                                                                                                                                                </select>
+                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                    </nav>
+                                                                                                                                                                                                                                        </header>
 
-function initializeApp() {
-  checkAuthStatus();
-  loadPosts();
-  setupEventListeners();
-}
+                                                                                                                                                                                                                                            <main class="content">
+                                                                                                                                                                                                                                                    <div id="search" class="search-container">
+                                                                                                                                                                                                                                                                <input type="text" id="search-input" class="search-input" data-lang="searchPlaceholder" placeholder="Search posts...">
+                                                                                                                                                                                                                                                                            <button id="search-btn" class="search-button" data-lang="searchButton">Search</button>
+                                                                                                                                                                                                                                                                                    </div>
 
-function checkAuthStatus() {
-  auth.checkAuth().then(isLoggedIn => {
-    updateLoginButton(isLoggedIn);
-  }).catch(error => {
-    console.error('Error checking auth status:', error);
-  });
-}
+                                                                                                                                                                                                                                                                                            <div id="posts" class="posts-container">
+                                                                                                                                                                                                                                                                                                        <!-- Posts will be dynamically added here -->
+                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                    </main>
 
-function updateLoginButton(isLoggedIn) {
-  const loginBtn = document.getElementById('login-btn');
-  if (!loginBtn) return;
+                                                                                                                                                                                                                                                                                                                        <footer class="main-footer">
+                                                                                                                                                                                                                                                                                                                                <p>&copy; 2023 Post Sharing Platform</p>
+                                                                                                                                                                                                                                                                                                                                    </footer>
 
-  if (isLoggedIn) {
-    loginBtn.textContent = 'Logout';
-    loginBtn.href = '#';
-    loginBtn.addEventListener('click', logout);
-  } else {
-    loginBtn.textContent = 'Login';
-    loginBtn.href = 'login.html';
-    loginBtn.removeEventListener('click', logout);
-  }
-}
-
-function loadPosts() {
-  db.getPosts().then(posts => {
-    displayPosts(posts);
-  }).catch(error => {
-    console.error('Error loading posts:', error);
-  });
-}
-
-function displayPosts(posts) {
-  const postsSection = document.getElementById('posts');
-  if (!postsSection) return;
-
-  postsSection.innerHTML = '';
-  posts.forEach(post => {
-    const postElement = createPostElement(post);
-    postsSection.appendChild(postElement);
-  });
-}
-
-function createPostElement(post) {
-  const postDiv = document.createElement('div');
-  postDiv.classList.add('post');
-  postDiv.innerHTML = `
-    <h2>${escapeHtml(post.title)}</h2>
-    <p>${escapeHtml(post.content)}</p>
-    <button class="like-btn" data-id="${post.id}">Like</button>
-    <span class="like-count">${post.likes}</span>
-  `;
-  postDiv.querySelector('.like-btn').addEventListener('click', () => likePost(post.id));
-  return postDiv;
-}
-
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-function setupEventListeners() {
-  const searchBtn = document.getElementById('search-btn');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', searchPosts);
-  }
-
-  const languageSelect = document.getElementById('language-select');
-  if (languageSelect) {
-    languageSelect.addEventListener('change', changeLanguage);
-  }
-}
-
-function searchPosts() {
-  const searchInput = document.getElementById('search-input');
-  if (!searchInput) return;
-
-  const query = searchInput.value.trim();
-  if (query) {
-    search.searchPosts(query).then(displayPosts).catch(error => {
-      console.error('Error searching posts:', error);
-    });
-  }
-}
-
-function changeLanguage() {
-  const languageSelect = document.getElementById('language-select');
-  if (!languageSelect) return;
-
-  const selectedLanguage = languageSelect.value;
-  language.changeLanguage(selectedLanguage).then(() => {
-    // Refresh the page content with the new language
-    loadPosts();
-    updateUILanguage();
-  }).catch(error => {
-    console.error('Error changing language:', error);
-  });
-}
-
-function updateUILanguage() {
-  // Update all elements with data-lang attribute
-  document.querySelectorAll('[data-lang]').forEach(element => {
-    const key = element.getAttribute('data-lang');
-    element.textContent = language.translate(key);
-  });
-}
-
-function logout() {
-  auth.logout().then(() => {
-    updateLoginButton(false);
-    loadPosts(); // Reload posts to reflect logged out state
-  }).catch(error => {
-    console.error('Error logging out:', error);
-  });
-}
-
-function likePost(postId) {
-  db.likePost(postId).then(() => {
-    loadPosts(); // Reload posts to update like count
-  }).catch(error => {
-    console.error('Error liking post:', error);
-  });
-}
+                                                                                                                                                                                                                                                                                                                                        <script src="src/language.js"></script>
+                                                                                                                                                                                                                                                                                                                                            <script src="src/auth.js"></script>
+                                                                                                                                                                                                                                                                                                                                                <script src="src/db.js"></script>
+                                                                                                                                                                                                                                                                                                                                                    <script src="src/post.js"></script>
+                                                                                                                                                                                                                                                                                                                                                        <script src="src/search.js"></script>
+                                                                                                                                                                                                                                                                                                                                                            <script src="src/rating.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                <script src="src/comment.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                    <script src="src/recommendation.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                        <script src="src/ads.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                            <script src="config/config.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                                <script src="index.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                                </body>
+                                                                                                                                                                                                                                                                                                                                                                                </html>
