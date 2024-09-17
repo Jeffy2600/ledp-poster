@@ -2,25 +2,32 @@
 const config = {
     // Database configuration
     database: {
-        host: 'localhost',
-        user: 'your_username',
-        password: 'your_password',
-        database: 'your_database_name',
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'your_username',
+        password: process.env.DB_PASSWORD || 'your_password',
+        database: process.env.DB_NAME || 'your_database_name',
         connectionLimit: 10
     },
-    apiUrl: 'https://api.example.com',
-    apiKey: 'your-api-key',
-    timeout: 5000,
+    apiUrl: process.env.API_URL || 'https://api.example.com',
+    apiKey: process.env.API_KEY || 'your-api-key',
+    timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 5000,
 };
 
-// Function to get database connection
 const mysql = require('mysql2/promise');
-const pool = mysql.createPool(config.database);
+let pool;
+
+// Function to initialize database connection pool
+function initializePool() {
+    pool = mysql.createPool(config.database);
+}
 
 // Function to execute database queries
 async function query(sql, params) {
+    if (!pool) {
+        initializePool();
+    }
     try {
-        const [rows, fields] = await pool.execute(sql, params);
+        const [rows] = await pool.execute(sql, params);
         return rows;
     } catch (error) {
         console.error('Database query error:', error);
@@ -34,9 +41,9 @@ async function getDatabaseConfig() {
     try {
         const result = await query(sql);
         if (result.length > 0) {
-            config.apiUrl = result[0].api_url;
-            config.apiKey = result[0].api_key;
-            config.timeout = result[0].timeout;
+            config.apiUrl = result[0].api_url || config.apiUrl;
+            config.apiKey = result[0].api_key || config.apiKey;
+            config.timeout = result[0].timeout || config.timeout;
         }
     } catch (error) {
         console.error('Error fetching config from database:', error);
