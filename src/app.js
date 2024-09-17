@@ -1,74 +1,44 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // เช็คสถานะการล็อกอิน
-  checkAuthStatus();
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
+const { config, initializeConfig } = require('./config');
 
-  // โหลดโพสต์
-  loadPosts();
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const postsRouter = require('./routes/posts');
 
-  // เพิ่ม event listener สำหรับปุ่มค้นหา
-  const searchBtn = document.getElementById('search-btn');
-  searchBtn.addEventListener('click', searchPosts);
+const app = express();
 
-  // เพิ่ม event listener สำหรับการเปลี่ยนภาษา
-  const languageSelect = document.getElementById('language-select');
-  languageSelect.addEventListener('change', changeLanguage);
+// Middleware
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+
+// Initialize config
+initializeConfig().then(() => {
+    console.log('Configuration initialized');
+}).catch(error => {
+    console.error('Error initializing configuration:', error);
 });
 
-function checkAuthStatus() {
-  // เช็คสถานะการล็อกอินจาก auth.js
-  auth.checkAuth().then(isLoggedIn => {
-    const loginBtn = document.getElementById('login-btn');
-    if (isLoggedIn) {
-      loginBtn.textContent = 'Logout';
-      loginBtn.href = '#';
-      loginBtn.addEventListener('click', logout);
-    } else {
-      loginBtn.textContent = 'Login';
-      loginBtn.href = 'login.html';
-    }
-  });
-}
+// Routes
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/posts', postsRouter);
 
-function loadPosts() {
-  // โหลดโพสต์จาก db.js
-  db.getPosts().then(posts => {
-    const postsSection = document.getElementById('posts');
-    postsSection.innerHTML = '';
-    posts.forEach(post => {
-      const postElement = createPostElement(post);
-      postsSection.appendChild(postElement);
+// Error handling
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        message: 'An unexpected error occurred',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
-  });
-}
+});
 
-function createPostElement(post) {
-  const postDiv = document.createElement('div');
-  postDiv.classList.add('post');
-  postDiv.innerHTML = `
-        <h2>${post.title}</h2>
-        <p>${post.content}</p>
-        <button class="like-btn" data-id="${post.id}">Like</button>
-        <span class="like-count">${post.likes}</span>
-    `;
-  return postDiv;
-}
-
-function searchPosts() {
-  const searchInput = document.getElementById('search-input');
-  const query = searchInput.value;
-  // ค้นหาโพสต์โดยใช้ฟังก์ชันจาก search.js
-  search.searchPosts(query).then(loadPosts);
-}
-
-function changeLanguage() {
-  const selectedLanguage = document.getElementById('language-select').value;
-  // เปลี่ยนภาษาโดยใช้ฟังก์ชันจาก language.js
-  language.changeLanguage(selectedLanguage);
-}
-
-function logout() {
-  // ล็อกเอาท์โดยใช้ฟังก์ชันจาก auth.js
-  auth.logout().then(() => {
-    window.location.reload();
-  });
-}
+module.exports = app;
