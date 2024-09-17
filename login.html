@@ -5,44 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang="login">Login</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="main-header">
-        <h1 class="site-title" data-lang="login">Login</h1>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="index.html" data-lang="home"><i class="fas fa-home"></i> Home</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <h1 class="site-title" data-lang="login">Login</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" data-lang="home">Home</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main class="content">
         <div class="container">
-            <form id="loginForm" class="form">
+            <form id="login-form" class="form">
                 <div class="form-group">
-                    <label for="username" data-lang="username">Username:</label>
-                    <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username" required>
-                    </div>
+                    <label for="username" data-lang="username">Username</label>
+                    <input type="text" id="username" class="input-group" required>
                 </div>
                 <div class="form-group">
-                    <label for="password" data-lang="password">Password:</label>
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" required>
-                        <i class="fas fa-eye" id="togglePassword"></i>
-                    </div>
+                    <label for="password" data-lang="password">Password</label>
+                    <input type="password" id="password" class="input-group" required>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" data-lang="login">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                </div>
+                <button type="submit" class="btn btn-primary" data-lang="loginButton">Login</button>
             </form>
-            <p class="text-center">
-                <a href="register.html" data-lang="registerLink">Don't have an account? Register here</a>
+            <p class="form-footer">
+                <span data-lang="noAccount">Don't have an account?</span>
+                <a href="register.html" data-lang="register">Register</a>
             </p>
         </div>
     </main>
@@ -50,11 +42,6 @@
     <footer class="main-footer">
         <p>&copy; 2023 Post Sharing Platform</p>
     </footer>
-
-    <select id="language-select">
-        <option value="en">English</option>
-        <option value="th">ไทย</option>
-    </select>
 
     <script src="src/language.js"></script>
     <script src="src/auth.js"></script>

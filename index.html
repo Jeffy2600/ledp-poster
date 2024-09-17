@@ -5,38 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang="welcome">Welcome to the Post Sharing Platform</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="main-header">
-        <h1 class="site-title" data-lang="welcome">Welcome to the Post Sharing Platform</h1>
-        <nav class="main-nav">
-            <ul class="nav-list">
-                <li><a href="#" id="login-link" data-lang="login">Login</a></li>
-                <li><a href="profile.html" id="profile-link" data-lang="profile">Profile</a></li>
-                <li><a href="create-post.html" id="create-post-link" data-lang="createPost">Create Post</a></li>
-            </ul>
-            <div class="language-selector">
-                <label for="language-select" data-lang="language_label">Language:</label>
-                <select id="language-select">
-                    <option value="en">English</option>
-                    <option value="th">ไทย</option>
-                </select>
-            </div>
-        </nav>
+        <div class="container">
+            <h1 class="site-title" data-lang="welcome">Welcome to the Post Sharing Platform</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" id="login-link" data-lang="login">Login</a></li>
+                    <li><a href="profile.html" id="profile-link" data-lang="profile">Profile</a></li>
+                    <li><a href="create-post.html" id="create-post-link" data-lang="createPost">Create Post</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <main class="content">
-        <div id="search" class="search-container">
-            <input type="text" id="search-input" class="search-input" data-lang="searchPlaceholder" placeholder="Search posts...">
-            <button id="search-btn" class="search-button" data-lang="searchButton">Search</button>
-        </div>
+        <div class="container">
+            <div class="search-container">
+                <input type="text" id="search-input" class="input-group" data-lang="searchPlaceholder" placeholder="Search posts...">
+                <button id="search-btn" class="btn" data-lang="searchButton">Search</button>
+            </div>
 
-        <div id="posts" class="posts-container">
-            <!-- Posts will be dynamically added here -->
-        </div>
+            <div id="posts" class="post-grid">
+                <!-- Posts will be dynamically added here -->
+            </div>
 
-        <div id="pagination" class="pagination">
-            <!-- Pagination controls will be added here -->
+            <div id="pagination" class="pagination">
+                <!-- Pagination controls will be added here -->
+            </div>
         </div>
     </main>
 
